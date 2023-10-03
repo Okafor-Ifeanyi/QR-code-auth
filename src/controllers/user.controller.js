@@ -6,7 +6,6 @@ import { encode_jwt } from "../configs/jwt.config.js";
 // Register Patient
 const register = async (req, res) => {
     const info = req.body;
-    console.log(info)
   
     try {
       // CrossCheck if the email or phone number is existing in the database
