@@ -58,4 +58,80 @@ const login = async (req, res) => {
   }
 }
 
-export{ register, login }
+// Fetch my Profile
+const getUserByID = async (req, res) => {
+  const _id = req.params.id
+  try {
+    const myProfile = await userModel.findOne({ _id });
+
+    if (!myProfile) throw new Error("User does not exist")
+
+    res.status(201).json({
+      success: true,
+      message: "User Fetched successfully",
+      data: myProfile,
+    })
+  } catch (error) {
+    res.status(403).json({ success: false, message: error.message });
+  }
+};
+
+const getRoleByID = async (req, res) => {
+  const role = req.params.role
+  try {
+    const myProfile = await userModel.find({ role });
+
+    if (!myProfile) throw new Error("User does not exist")
+
+    res.status(201).json({
+      success: true,
+      message: "User Fetched successfully",
+      data: myProfile
+    })
+  } catch (error) {
+    res.status(403).json({ success: false, message: error.message });
+  }
+};
+
+// Update a user
+const updateUserRole = async (req, res) => {
+  const updateData = req.body
+  const id = req.params.id
+  
+  try{
+      // Check if selected email is already taken
+      if(updateData.username){
+          const emailAvailable = await userModel.findOne({ username: updateData.username })
+              
+          // throws an error if the username selected is taken
+          if (emailAvailable){ 
+            return res.status(403).json({ 
+              success: false, 
+              message: 'User with updated email already exists'
+            })
+          }
+      }
+
+      // profile Picture
+      if (req.files !== undefined) {
+        if (req.files.profile_img !== undefined) {
+          var profile_img = await storeImage(req.files.profile_img.path)
+        } 
+      }
+
+      const updatedData = await userModel.findByIdAndUpdate(
+        id, {...updateData, profile_img}, { new: true}
+      )
+
+      return res.status(200).json({ 
+          success: true, 
+          message: 'User updated successfully', 
+          data: updatedData 
+      })
+  } 
+  catch (error) {
+      return res.status(401).json({ success: false, message: error.message })                       
+  }    
+}
+
+export{ register, login, getUserByID, getRoleByID, updateUserRole }
