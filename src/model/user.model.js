@@ -58,7 +58,6 @@ userSchema.methods.matchPassword = async function (password) {
   if (!password) throw new Error("Password is missing, can not compare");
 
   try {
-    // console.log(password);
     const result = await bcrypt.compare(password, this.password);
     return result;
   } catch (e) {
