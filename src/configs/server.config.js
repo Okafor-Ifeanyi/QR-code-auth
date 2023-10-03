@@ -9,6 +9,10 @@ export function createServer() {
 
     app.use(morgan('dev'))
 
+    // Form type
+    app.use(express.urlencoded({extended: false}))
+    app.use(express.json())
+
     // Setup Cross-Origin Resource Sharing 
     // to enable passing requests through the frontend
     app.use(cors({
@@ -28,12 +32,6 @@ export function createServer() {
     // Route link
     app.use('/api', router)
 
-    // Form type
-    app.use(express.json())
-    
-    // Serve uploaded video files
-    app.use('/uploads/videos', express.static('uploads/videos'));
-    
     // Error Handler
     app.use(errorHandler)
     

@@ -16,4 +16,10 @@ const registerSchema = joi.object().keys({
   username: joi.string().required()
 });
 
-export { registerSchema }
+const loginSchema = joi.object().keys({
+  password: joi.string().min(6).required(),
+  username: joi.string().required()
+});
+
+
+export { registerSchema, loginSchema }
