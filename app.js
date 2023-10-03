@@ -1,5 +1,5 @@
-import { createServer } from './src/config/server.config.js';
-import { connect } from './src/config/database.config.js';
+import { createServer } from './src/configs/server.config.js';
+import { connect } from './src/configs/database.config.js';
 
 const app = createServer()
 
