@@ -9,5 +9,4 @@ import { attendanceSchema } from '../schemas/index.schema.js'
 router.post("/signIn", validate(attendanceSchema), isAuth, markInAttendance)
 router.post("/signOut", validate(attendanceSchema), isAuth, markOutAttendance)
 
-
 export default router
