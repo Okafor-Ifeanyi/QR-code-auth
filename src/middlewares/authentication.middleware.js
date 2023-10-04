@@ -1,5 +1,5 @@
 import { verifyToken, decodeToken } from '../configs/jwt.config.js';
-import { userModel } from '../model/user.model.js';
+import { userModel } from '../models/user.model.js';
 
 const isAuth = async (req, res, next) => {
     let token = req.params.token;
