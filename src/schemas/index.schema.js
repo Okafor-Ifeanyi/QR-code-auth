@@ -26,6 +26,8 @@ const updateSchema = joi.object().keys({
   role: joi.string().valid("teacher", "student", "admin"),
 });
 
+const attendanceSchema = joi.object().keys({
+  qrCodeData: joi.string().length(32).required()
+});
 
-
-export { registerSchema, loginSchema, updateSchema }
+export { registerSchema, loginSchema, updateSchema, attendanceSchema }

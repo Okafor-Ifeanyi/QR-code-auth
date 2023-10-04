@@ -1,11 +1,12 @@
 import { userModel } from "../models/user.model.js";
 import { storeImage } from "../configs/cloudinary.config.js";
 import { encode_jwt } from "../configs/jwt.config.js";
+import { v4 as uuidv4 } from 'uuid';
+import qr from 'qrcode'
 
 // Register Patient
 const register = async (req, res) => {
     const info = req.body;
-  
     try {
       // CrossCheck if the email or phone number is existing in the database
       const existingUsername = await userModel.findOne({ username: info.username });
@@ -22,8 +23,14 @@ const register = async (req, res) => {
         } 
       }
 
-      // Create Patient
-      const userData = await userModel.create({...info, profile_img });
+      // Create a unique card Code
+      const uuid = uuidv4();
+
+      // Remove dashes to get a 32-character code
+      const cardQRCode = uuid.replace(/-/g, '');
+
+      // Create User
+      const userData = await userModel.create({...info, profile_img, cardQRCode });
   
       // Response
       res.status(200).json({ Success: true, message: userData });
@@ -33,6 +40,7 @@ const register = async (req, res) => {
     }
 };
 
+// login user
 const login = async (req, res) => {
   const { username, password } = req.body;
 
@@ -75,6 +83,7 @@ const getUserByID = async (req, res) => {
   }
 };
 
+// Fetch users by Role
 const getUsersByRole = async (req, res) => {
   const role = req.params.role
   try {
@@ -133,4 +142,26 @@ const updateUserRole = async (req, res) => {
   }    
 }
 
-export{ register, login, getUserByID, getUsersByRole, updateUserRole }
+// Generate QR Code
+const generateQR = async (req, res) => {
+  try {
+    const _id = req.user; // Data for the QR code
+
+    const user = await userModel.findOne({ _id });
+
+    // Generate the QR code
+    const qrCode = await qr.toDataURL(user.cardQRCode);
+
+    // Send the QR code image as a response
+    return res.status(200).json({ 
+      success: true, 
+      message: 'QR Code Generated Successfully', 
+      data: `<img src="${qrCode}" alt="QR Code">`
+  })
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error.message);
+  }
+}
+
+export{ register, login, getUserByID, getUsersByRole, updateUserRole, generateQR }

@@ -2,12 +2,15 @@ import express from 'express'
 const router = express.Router()
 import { validate } from '../middlewares/validate.middleware.js'
 import { loginSchema, registerSchema, updateSchema } from '../schemas/index.schema.js'
-import { login, register, getUserByID, updateUserRole, getUsersByRole } from '../controllers/user.controller.js'
+import { login, register, getUserByID, updateUserRole, getUsersByRole, generateQR } from '../controllers/user.controller.js'
 import { isAdmin, isAuth } from '../middlewares/authentication.middleware.js'
 
 // CRUD Operations
 router.post('/register', validate(registerSchema), register)
 router.post('/login', validate(loginSchema), login)
+
+// generate QR Code
+router.get('/generateQRCode', isAuth, generateQR)
 
 // route to get all User by Role
 router.get('/all/:role', isAuth, getUsersByRole)
