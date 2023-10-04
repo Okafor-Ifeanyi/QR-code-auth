@@ -1,7 +1,7 @@
 import express from 'express'
 import cors from "cors"
 import morgan from "morgan"
-import router from "../router/index.router.js"
+import router from "../routers/index.router.js"
 import { errorHandler } from '../middlewares/error.middleware.js'
 
 export function createServer() {
@@ -10,7 +10,7 @@ export function createServer() {
     app.use(morgan('dev'))
 
     // Form type
-    app.use(express.urlencoded({extended: false}))
+    app.use(express.urlencoded({extended: true}))
     app.use(express.json())
 
     // Setup Cross-Origin Resource Sharing 

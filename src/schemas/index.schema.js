@@ -6,6 +6,7 @@ const registerSchema = joi.object().keys({
   lastName: joi.string().required(),
   email: joi.string().email(),
   password: joi.string().min(6).required(),
+  role: joi.string().valid('student'),
   confirm_password: joi
     .any()
     .equal(joi.ref("password"))
@@ -21,5 +22,12 @@ const loginSchema = joi.object().keys({
   username: joi.string().required()
 });
 
+const updateSchema = joi.object().keys({
+  role: joi.string().valid("teacher", "student", "admin"),
+});
 
-export { registerSchema, loginSchema }
+const attendanceSchema = joi.object().keys({
+  qrCodeData: joi.string().length(32).required()
+});
+
+export { registerSchema, loginSchema, updateSchema, attendanceSchema }
