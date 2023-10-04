@@ -1,5 +1,4 @@
-import { userModel } from "../model/user.model.js";
-// const { storeImage } = require('../utils/cloudinary.util');
+import { userModel } from "../models/user.model.js";
 import { storeImage } from "../configs/cloudinary.config.js";
 import { encode_jwt } from "../configs/jwt.config.js";
 
@@ -76,7 +75,7 @@ const getUserByID = async (req, res) => {
   }
 };
 
-const getRoleByID = async (req, res) => {
+const getUsersByRole = async (req, res) => {
   const role = req.params.role
   try {
     const myProfile = await userModel.find({ role });
@@ -134,4 +133,4 @@ const updateUserRole = async (req, res) => {
   }    
 }
 
-export{ register, login, getUserByID, getRoleByID, updateUserRole }
+export{ register, login, getUserByID, getUsersByRole, updateUserRole }
