@@ -58,7 +58,7 @@ const login = async (req, res) => {
     res.status(200).json({
       token: token,
       Token_Type: "Bearer",
-      userId: existingUser._id,
+      user: existingUser,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
