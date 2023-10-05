@@ -101,6 +101,22 @@ const getUsersByRole = async (req, res) => {
   }
 };
 
+// Fetch users
+const getAllUsers = async (req, res) => {
+  const role = req.params.role
+  try {
+    const myProfile = await userModel.find();
+
+    res.status(201).json({
+      success: true,
+      message: "User Fetched successfully",
+      data: myProfile
+    })
+  } catch (error) {
+    res.status(403).json({ success: false, message: error.message });
+  }
+};
+
 // Update a user
 const updateUserRole = async (req, res) => {
   const updateData = req.body
@@ -164,4 +180,33 @@ const generateQR = async (req, res) => {
   }
 }
 
-export{ register, login, getUserByID, getUsersByRole, updateUserRole, generateQR }
+// Generate QR Code
+const generateQRAdmin = async (req, res) => {
+  const studentId = req.params.userId
+  try {
+    const _id = studentId; // Data for the QR code
+
+    const user = await userModel.findOne({ _id });
+
+    // if this user doesn't exist throw error
+    if(!user){
+      return res.status(404).json({ message: "User does not exist" });
+    }
+
+    // Generate the QR code
+    const qrCode = await qr.toDataURL(user.cardQRCode);
+
+    // Send the QR code image as a response
+
+    return res.status(200).send({ 
+      success: true, 
+      message: 'QR Code Generated Successfully', 
+      data: `<img src="${qrCode}" alt="QR Code">`
+    })
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error.message);
+  }
+}
+
+export{ register, login, getUserByID, getUsersByRole, updateUserRole, generateQR, generateQRAdmin, getAllUsers }
