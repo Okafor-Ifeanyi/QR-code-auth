@@ -169,6 +169,7 @@ const generateQR = async (req, res) => {
     const qrCode = await qr.toDataURL(user.cardQRCode);
 
     // Send the QR code image as a response
+    return res.send(`<img src="${qrCode}" alt="QR Code">`)
     return res.status(200).json({ 
       success: true, 
       message: 'QR Code Generated Successfully', 
