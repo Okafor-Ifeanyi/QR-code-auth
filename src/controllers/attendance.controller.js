@@ -39,7 +39,7 @@ const markInAttendance = async (req, res) => {
         // Response
         res.status(200).json({ 
             Success: true, 
-            message: "Attendance Marked in",
+            message: `Attendance for ${existingUser.username} Marked in`,
             attendance: updatedData
         });
     } catch (error) {
@@ -80,7 +80,7 @@ const markOutAttendance = async (req, res) => {
         // Response
         res.status(200).json({ 
             Success: true, 
-            message: "Attendance Marked Out",
+            message: `Attendance for ${existingUser.username} Marked Out`,
             attendance: updatedData
         });
   
@@ -89,4 +89,40 @@ const markOutAttendance = async (req, res) => {
     }
 };
 
-export{ markInAttendance, markOutAttendance }
+// Markout Attendance
+const getUserSession = async (req, res) => {
+    const userId = req.params.userId;
+  
+    try {
+        // get User info
+        const existingUser = await userModel.findOne({ _id : userId })
+        console.log(existingUser)
+        if (!existingUser) {
+            // Student not found, return an error response
+            return res.status(404).json({ error: 'User Id does not exist' });
+        }
+        
+        // Check QRCode Data
+        const existingAttendance = await attendanceModel.find({ userId });
+        
+        if (!existingAttendance.length == 0) {
+            // Student not found, return an error response
+            return res.status(404).json({ error: 'User has no attendance yet ' });
+        }
+
+        
+
+        // Response
+        res.status(200).json({ 
+            Success: true, 
+            message: `Attendance for ${existingUser.username} successfully fetched`,
+            attendance: existingAttendance
+        });
+  
+    } catch (error) {
+      return res.status(500).json({ Success: false, message: error.message }) 
+    }
+};
+
+
+export{ markInAttendance, markOutAttendance, getUserSession }
